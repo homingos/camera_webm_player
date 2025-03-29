@@ -1,9 +1,9 @@
-import ARPreview from "./ar-preview";
 import { notFound } from "next/navigation";
-export default async function Home({ 
-  searchParams 
-}: { 
-  searchParams: Promise<{ sh?: string }>
+import ARPreview from "./ar-preview";
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ sh?: string }>;
 }) {
   const { sh } = await searchParams;
 
@@ -11,13 +11,14 @@ export default async function Home({
     return notFound();
   }
 
-  const res = await fetch(`https://zingcam.prod.flamapp.com/campaign-svc/api/v1/campaigns/${sh}/experiences`);
+  const res = await fetch(
+    `https://zingcam.prod.flamapp.com/campaign-svc/api/v1/campaigns/${sh}/experiences`
+  );
   const data = await res.json();
 
   if (data.status !== 200) {
     return notFound();
   }
-
 
   const experience = data?.data?.experiences[0];
   const videoUrl = experience?.videos?.compressed;
@@ -26,16 +27,25 @@ export default async function Home({
     title: experience?.ui_elements?.banners?.title,
     sub_title: experience?.ui_elements?.banners?.sub_title,
     redirect_url: experience?.ui_elements?.banners?.redirection_url,
-    show: !experience?.ui_elements?.banners || experience?.ui_elements?.banners?.variant !== 0,
+    show:
+      !experience?.ui_elements?.banners ||
+      experience?.ui_elements?.banners?.variant !== 0,
     primary_color: experience?.ui_elements?.banners?.primary_color,
     secondary_color: experience?.ui_elements?.banners?.secondary_color,
-  }
+  };
+
+  const is_alpha =
+    (experience?.variant?.track_type === "GROUND" &&
+      experience?.variant?.is_alpha) ||
+    (experience?.variant?.track_type === "CARD" &&
+      experience?.variant?.class === 1);
 
   return (
     <>
-      <ARPreview 
-        videoUrl={videoUrl} 
+      <ARPreview
+        videoUrl={videoUrl}
         alphaHorizontal={experience?.variant?.is_horizontal}
+        isAlpha={is_alpha}
         bannerData={bannerData}
       />
     </>

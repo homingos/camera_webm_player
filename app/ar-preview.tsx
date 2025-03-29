@@ -10,6 +10,7 @@ export default function ARPreview({
   videoUrl,
   bannerData,
   alphaHorizontal,
+  isAlpha,
 }: {
   videoUrl: string;
   bannerData: {
@@ -21,13 +22,19 @@ export default function ARPreview({
     secondary_color: string;
   };
   alphaHorizontal: boolean;
+  isAlpha: boolean;
 }) {
   const [onboarding, setOnboarding] = useState(false);
 
   return (
     <>
       {onboarding ? (
-        <FakeAR videoUrl={videoUrl} bannerData={bannerData} alphaHorizontal={alphaHorizontal} />
+        <FakeAR
+          videoUrl={videoUrl}
+          bannerData={bannerData}
+          alphaHorizontal={alphaHorizontal}
+          isAlpha={isAlpha}
+        />
       ) : (
         <OnboardingScreen setOnboarding={setOnboarding} />
       )}
@@ -63,7 +70,8 @@ function FakeAR({
     primary_color: "",
     secondary_color: "",
   },
-  alphaHorizontal
+  alphaHorizontal,
+  isAlpha,
 }: {
   videoUrl: string;
   bannerData: {
@@ -75,12 +83,16 @@ function FakeAR({
     secondary_color: string;
   };
   alphaHorizontal: boolean;
-
+  isAlpha: boolean;
 }) {
   return (
     <div className="relative h-full w-full">
       <CameraFrame />
-      <CardPreview videoUrl={videoUrl} alphaHorizontal={alphaHorizontal} />
+      <CardPreview
+        videoUrl={videoUrl}
+        alphaHorizontal={alphaHorizontal}
+        isAlpha={isAlpha}
+      />
       <Banner
         title={bannerData.title}
         sub_title={bannerData.sub_title}

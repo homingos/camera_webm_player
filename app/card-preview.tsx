@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import WebGLRenderer from "@/utils/webgl";
 import { Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -54,9 +55,11 @@ interface WebGLCanvasState {
 export default function CardPreview({
   videoUrl,
   alphaHorizontal,
+  isAlpha,
 }: {
   videoUrl: string;
   alphaHorizontal: boolean;
+  isAlpha: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasTopRef = useRef<HTMLCanvasElement>(null);
@@ -86,7 +89,7 @@ export default function CardPreview({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !video.src.endsWith(".mp4")) return;
+    if (!video || !video.src.endsWith(".mp4") || !isAlpha) return;
 
     const wbglCanvasHori = initWebGL(fragmentShaderHorizontalSource);
     const wbglCanvasVerti = initWebGL(fragmentShaderSource);
@@ -150,7 +153,7 @@ export default function CardPreview({
   }, [videoRef.current, canvasTopRef.current]);
 
   return (
-    <div className="w-fit mx-auto h-full absolute top-0 left-0">
+    <div className="w-fit mx-auto h-screen absolute top-0 left-0 flex items-center justify-center">
       <video
         autoPlay
         muted={muted}
@@ -159,13 +162,18 @@ export default function CardPreview({
         crossOrigin="anonymous"
         ref={videoRef}
         src={videoUrl}
-        className="relative z-0 invisible"
+        className={cn("z-10 w-4/5", isAlpha && "invisible")}
       />
-      <canvas
-        ref={canvasTopRef}
-        className="absolute z-10 top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3 w-4/5"
-      />
-      <canvas ref={canvasBottomRef} className="relative z-10" />
+      {isAlpha && (
+        <>
+          {" "}
+          <canvas
+            ref={canvasTopRef}
+            className="absolute z-10 top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3 w-4/5"
+          />
+          <canvas ref={canvasBottomRef} className="relative z-10" />
+        </>
+      )}
       <button
         onClick={() => setMuted(!muted)}
         className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
