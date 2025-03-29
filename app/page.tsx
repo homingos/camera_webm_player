@@ -18,6 +18,7 @@ export default async function Home({
     return notFound();
   }
 
+
   const experience = data?.data?.experiences[0];
   const videoUrl = experience?.videos?.compressed;
 
@@ -34,6 +35,7 @@ export default async function Home({
     <>
       <ARPreview 
         videoUrl={videoUrl} 
+        alphaHorizontal={experience?.variant?.is_horizontal}
         bannerData={bannerData}
       />
     </>

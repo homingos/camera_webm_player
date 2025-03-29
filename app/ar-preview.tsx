@@ -1,40 +1,60 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Banner from "./banner";
 import CameraFrame from "./camera-frame";
 import CardPreview from "./card-preview";
-import { Button } from "@/components/ui/button";
 
-export default function ARPreview({ videoUrl, bannerData }: {
-  videoUrl: string, bannerData: {
-    title: string,
-    sub_title: string,
-    redirect_url: string,
-    show: boolean,
-    primary_color: string,
-    secondary_color: string,
-  }
+export default function ARPreview({
+  videoUrl,
+  bannerData,
+  alphaHorizontal,
+}: {
+  videoUrl: string;
+  bannerData: {
+    title: string;
+    sub_title: string;
+    redirect_url: string;
+    show: boolean;
+    primary_color: string;
+    secondary_color: string;
+  };
+  alphaHorizontal: boolean;
 }) {
   const [onboarding, setOnboarding] = useState(false);
 
   return (
     <>
-      {onboarding ? <FakeAR videoUrl={videoUrl} bannerData={bannerData} /> : <OnboardingScreen setOnboarding={setOnboarding} />}
+      {onboarding ? (
+        <FakeAR videoUrl={videoUrl} bannerData={bannerData} alphaHorizontal={alphaHorizontal} />
+      ) : (
+        <OnboardingScreen setOnboarding={setOnboarding} />
+      )}
     </>
   );
-};
+}
 
-function OnboardingScreen({ setOnboarding }: { setOnboarding: (play: boolean) => void }) {
+function OnboardingScreen({
+  setOnboarding,
+}: {
+  setOnboarding: (play: boolean) => void;
+}) {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <Button className="font-bold text-xl" size="lg" onClick={() => setOnboarding(true)}>Start Experience</Button>
+      <Button
+        className="font-bold text-xl"
+        size="lg"
+        onClick={() => setOnboarding(true)}
+      >
+        Start Experience
+      </Button>
     </div>
   );
 }
 
-function FakeAR({ 
-  videoUrl, 
+function FakeAR({
+  videoUrl,
   bannerData = {
     title: "",
     sub_title: "",
@@ -42,23 +62,25 @@ function FakeAR({
     show: false,
     primary_color: "",
     secondary_color: "",
-  } 
+  },
+  alphaHorizontal
 }: {
-  videoUrl: string, bannerData: {
-    title: string,
-    sub_title: string,
-    redirect_url: string,
-    show: boolean,
-    primary_color: string,
-    secondary_color: string,
-  }
+  videoUrl: string;
+  bannerData: {
+    title: string;
+    sub_title: string;
+    redirect_url: string;
+    show: boolean;
+    primary_color: string;
+    secondary_color: string;
+  };
+  alphaHorizontal: boolean;
+
 }) {
   return (
     <div className="relative h-full w-full">
       <CameraFrame />
-      <CardPreview
-        videoUrl={videoUrl}
-      />
+      <CardPreview videoUrl={videoUrl} alphaHorizontal={alphaHorizontal} />
       <Banner
         title={bannerData.title}
         sub_title={bannerData.sub_title}

@@ -51,7 +51,13 @@ interface WebGLCanvasState {
   webGLCanvas?: WebGLRenderer;
 }
 
-export default function CardPreview({ videoUrl }: { videoUrl: string }) {
+export default function CardPreview({
+  videoUrl,
+  alphaHorizontal,
+}: {
+  videoUrl: string;
+  alphaHorizontal: boolean;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasTopRef = useRef<HTMLCanvasElement>(null);
   const canvasBottomRef = useRef<HTMLCanvasElement>(null);
@@ -90,7 +96,7 @@ export default function CardPreview({ videoUrl }: { videoUrl: string }) {
     let animationFrameId: number;
     const frameRate = 18;
     let lastTime = 0;
-    tf = true;
+    tf = alphaHorizontal;
 
     const draw = (time: number) => {
       if (video.paused || video.ended) return;
@@ -102,10 +108,18 @@ export default function CardPreview({ videoUrl }: { videoUrl: string }) {
         lastTime = time;
         if (tf) {
           wbglCanvasHori.setTexture(video);
-          wbglCanvasHori.render(video.videoWidth * 0.8, video.videoHeight * 0.8, tf);
+          wbglCanvasHori.render(
+            video.videoWidth * 0.8,
+            video.videoHeight * 0.8,
+            tf
+          );
         } else {
           wbglCanvasVerti.setTexture(video);
-          wbglCanvasVerti.render(video.videoWidth * 0.8, video.videoHeight * 0.8, tf);
+          wbglCanvasVerti.render(
+            video.videoWidth * 0.8,
+            video.videoHeight * 0.8,
+            tf
+          );
         }
       }
       webGLStateRef.current.animationFrameId = requestAnimationFrame(draw);
