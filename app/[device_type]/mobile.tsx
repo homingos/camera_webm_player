@@ -1,25 +1,6 @@
-import { notFound } from "next/navigation";
-import ARPreview from "./ar-preview";
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ sh?: string }>;
-}) {
-  const { sh } = await searchParams;
+import ARPreview from "../ar-preview";
 
-  if (!sh) {
-    return notFound();
-  }
-
-  const res = await fetch(
-    `https://zingcam.prod.flamapp.com/campaign-svc/api/v1/campaigns/${sh}/experiences`
-  );
-  const data = await res.json();
-
-  if (data.status !== 200) {
-    return notFound();
-  }
-
+export default async function Home({ OID, data }: { OID: string; data: any }) {
   const experience = data?.data?.experiences[0];
   const videoUrl = experience?.videos?.compressed;
 
